@@ -5,7 +5,10 @@
  * Requires: jQuery v1.7 or later
  * Author: Shaun Morrison
  */
+
 (function($){  
+	var isAnimating = false;
+	
     $.fn.pawCarousel = function(options) {  
         var  
 			defaults = {  
@@ -272,30 +275,51 @@
 
 	            //Next prev links
 	            $nextLink.click(function(e){
+	            	if(isAnimating == true) {
+	            		return false;
+	            	}
+	            	
+	            	isAnimating = true;
+	            	
 	            	e.preventDefault();
 	            	findActive();
 	            	activeVals('next');
 	            	endClone();
 	            	activePosition('next');
+	            	
 	            	$carouselMedia.animate({
 	            		'left': -$goingToPos
-	            	},animSpeed);
+	            	},animSpeed, function(){
+	            		isAnimating = false;
+	            	});
+	            	
 	            	setActiveNav();
 	            	
 	            });
+	            
 	            $prevLink.click(function(e){
+	            	if(isAnimating == true) {
+	            		return false;
+	            	}
+	            	
+	            	isAnimating = true;
+
 	            	e.preventDefault();
 	            	findActive();
 	            	activeVals('prev');
 	            	startClone();
 	            	activePosition('prev');
+	            	
 	            	$carouselMedia
 	            		.css({
 	            			'left':-$activePos
 	            		})
 	            		.animate({
 	            			'left': -$goingToPos
-	            		},animSpeed)
+	            		},animSpeed, function(){
+	            			isAnimating = false;
+	            		});
+	            		
 	            	setActiveNav();
 	            }); 
 
